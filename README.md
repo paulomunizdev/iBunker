@@ -11,27 +11,31 @@ iBunker is a command-line tool designed to provide encryption and decryption fun
 
 ## Usage
 
-### Encryption
+Obrigado pela observação. Vou corrigir o trecho relacionado à geração da chave. Aqui está a atualização:
 
-To encrypt a file, use the following command:
+### How iBunker Works
 
-```bash
-./ibunker encrypt <input_file> <output_file> <key_file>
-```
+#### Encryption:
 
-This command will read the key from the specified `<key_file>`, encrypt the contents of the `<input_file>`, and save the encrypted data to `<output_file>`.
+1. **Generating the Key:**
+   - Upon encryption, iBunker generates a strong encryption key internally using a cryptographically secure pseudo-random number generator.
 
-### Decryption
+2. **Encrypting the Text:**
+   - Using the AES encryption algorithm, the program encrypts the contents of the `<input_file>`.
 
-To decrypt a file, use the following command:
+3. **Saving the Result:**
+   - The encrypted data is saved to `<output_file>`.
 
-```bash
-./ibunker decrypt <input_file> <output_file> <key_file>
-```
+#### Decryption:
 
-This command will read the key from the specified `<key_file>`, decrypt the contents of the `<input_file>`, and save the decrypted data to `<output_file>`.
+1. **Reading the Key:**
+   - The program reads the decryption key from the specified `<key_file>`.
 
-## Installation
+2. **Decrypting the Text:**
+   - Using the AES decryption algorithm, the program decrypts the contents of the `<input_file>`.
+
+3. **Saving the Result:**
+   - The decrypted data is saved to `<output_file>`.## Installation
 
 1. Clone the repository:
     ```bash
