@@ -1,153 +1,125 @@
 /*
  * Title: iBunker
- * Version: 1.0
+ * Version: 2.0
  * Author: Paulo Muniz
  * GitHub: https://github.com/paulomunizdev
- * Description: This program encrypts or decrypts files using a provided key.
+ * Description: This program encrypts or decrypts files.
  */
 
 #include <iostream>
 #include <fstream>
+#include <cryptopp/aes.h>
+#include <cryptopp/modes.h>
+#include <cryptopp/filters.h>
+#include <cryptopp/osrng.h>
 #include <string>
-#include <vector>
-#include <ctime> // To use time()
-#include <cstdlib> // To use srand() and rand()
 
-using namespace std;
+// Function to encrypt using AES
+std::string EncryptAES(const std::string& plaintext, const std::string& key) {
+    std::string ciphertext;
 
-// Function to generate a strong key
-string generateStrongKey() {
-    const int keyLength = 32; // Set the length of the key (32 characters for a 128-bit key)
-    const string charset = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    // AES encryption setup
+    CryptoPP::AES::Encryption aesEncryption((CryptoPP::byte*)key.c_str(), CryptoPP::AES::DEFAULT_KEYLENGTH);
+    CryptoPP::CBC_Mode_ExternalCipher::Encryption cbcEncryption(aesEncryption, (CryptoPP::byte*)key.c_str());
 
-    srand(time(nullptr)); // Initialize the random number generator seed
+    // Encryption process
+    CryptoPP::StringSource(plaintext, true,
+        new CryptoPP::StreamTransformationFilter(cbcEncryption,
+            new CryptoPP::StringSink(ciphertext)
+        )
+    );
 
-    string key;
-    for (int i = 0; i < keyLength; ++i) {
-        key += charset[rand() % charset.length()]; // Add a random character to the key
-    }
-    return key;
+    return ciphertext;
 }
 
-// Function to convert the key from letters to numeric values
-vector<int> convertKey(const string& key) {
-    vector<int> numericKey;
-    for (char character : key) {
-        numericKey.push_back(static_cast<int>(character)); // Convert each character of the key to its ASCII value and add it to the vector
-    }
-    return numericKey; // Return the vector with the decimal values corresponding to the key
-}
+// Function to decrypt using AES
+std::string DecryptAES(const std::string& ciphertext, const std::string& key) {
+    std::string decryptedtext;
 
-// Function to encrypt the text with a key
-void encryptText(ifstream& input, ofstream& output, const vector<int>& numericKey) {
-    char character;
-    int keyIndex = 0;
-    while (input.get(character)) { // Read each character from the input file
-        // Calculate the encrypted value of the character using the key
-        int encryptedValue = static_cast<int>(character) + numericKey[keyIndex];
-        // Write the encrypted value to the output file
-        output << static_cast<char>(encryptedValue);
-        // Update the key index to move to the next character of the key
-        keyIndex = (keyIndex + 1) % numericKey.size();
-    }
-}
+    // AES decryption setup
+    CryptoPP::AES::Decryption aesDecryption((CryptoPP::byte*)key.c_str(), CryptoPP::AES::DEFAULT_KEYLENGTH);
+    CryptoPP::CBC_Mode_ExternalCipher::Decryption cbcDecryption(aesDecryption, (CryptoPP::byte*)key.c_str());
 
-// Function to decrypt the text with a key
-void decryptText(ifstream& input, ofstream& output, const vector<int>& numericKey) {
-    char character;
-    int keyIndex = 0;
-    while (input.get(character)) { // Read each character from the input file
-        // Calculate the decrypted value of the character using the key
-        int decryptedValue = static_cast<int>(character) - numericKey[keyIndex];
-        // Check if the decrypted value is less than 0
-        if (decryptedValue < 0) {
-            // If yes, add 256 to bring it back to the valid ASCII characters range
-            decryptedValue += 256;
-        }
-        // Write the decrypted value to the output file
-        output << static_cast<char>(decryptedValue);
-        // Update the key index to move to the next character of the key
-        keyIndex = (keyIndex + 1) % numericKey.size();
-    }
-}
+    // Decryption process
+    CryptoPP::StringSource(ciphertext, true,
+        new CryptoPP::StreamTransformationFilter(cbcDecryption,
+            new CryptoPP::StringSink(decryptedtext)
+        )
+    );
 
-// Function to open and check if files were opened correctly
-bool openFiles(const string& inputFile, const string& outputFile, ifstream& input, ofstream& output) {
-    // Open the input and output files
-    input.open(inputFile);
-    output.open(outputFile);
-
-    // Check if the files were opened correctly
-    if (!input.is_open()) {
-        cerr << "Error opening the input file." << endl;
-        return false;
-    }
-
-    if (!output.is_open()) {
-        cerr << "Error opening the output file." << endl;
-        return false;
-    }
-
-    return true;
-}
-
-// Function to perform the encryption or decryption operation on the text
-void performOperation(const string& option, const string& inputFile, const string& outputFile, const string& keyOrPassword) {
-    ifstream input;
-    ofstream output;
-
-    // Open the input and output files
-    if (!openFiles(inputFile, outputFile, input, output)) {
-        return;
-    }
-
-    string key; // Key to be used
-
-    // Generate a strong key for encryption
-    if (option == "encrypt") {
-        key = generateStrongKey();
-        cout << "Generated strong key: " << key << endl;
-    }
-    // Use the provided password for decryption
-    else if (option == "decrypt") {
-        key = keyOrPassword; // Password provided by the user
-    }
-
-    // Convert the key from letters to numeric values
-    vector<int> numericKey = convertKey(key);
-
-    // Decide whether to encrypt or decrypt the text
-    if (option == "encrypt")
-        encryptText(input, output, numericKey);
-    else if (option == "decrypt")
-        decryptText(input, output, numericKey);
-
-    // Close the input and output files
-    input.close();
-    output.close();
-
-    cout << "Operation completed." << endl;
+    return decryptedtext;
 }
 
 int main(int argc, char* argv[]) {
-    if (argc != 4 && argc != 5) {
-        cerr << "Usage: " << argv[0] << " <encrypt/decrypt> <input_file> <output_file> [password]" << endl;
+    // Check if correct number of arguments provided
+    if (argc != 5 && argc != 6) {
+        std::cerr << "Usage: " << argv[0] << " <encrypt/decrypt> <input_file> <output_file> <key_file>\n";
         return 1;
     }
 
-    // Get the command-line arguments
-    string option = argv[1];
-    string inputFile = argv[2];
-    string outputFile = argv[3];
+    std::string mode = argv[1];
+    std::string inputFile = argv[2];
+    std::string outputFile = argv[3];
+    std::string keyFile = argv[4];
+    std::string key;
 
-    // If the operation is decryption, get the password from the command line
-    string password;
-    if (argc == 5) {
-        password = argv[4];
+    if (mode == "encrypt") {
+        // Read key from specified file
+        std::ifstream keyInput(keyFile);
+        if (!keyInput) {
+            std::cerr << "Error opening key file.\n";
+            return 1;
+        }
+        std::getline(keyInput, key);
+        keyInput.close();
+    } else if (mode == "decrypt") {
+        // Check if all parameters were provided
+        if (argc != 5) {
+            std::cerr << "Usage: " << argv[0] << " decrypt <input_file> <output_file> <key_file>\n";
+            return 1;
+        }
+
+        // Read key from specified file
+        std::ifstream keyInput(keyFile);
+        if (!keyInput) {
+            std::cerr << "Error opening key file.\n";
+            return 1;
+        }
+        std::getline(keyInput, key);
+        keyInput.close();
+    } else {
+        std::cerr << "Invalid mode. Use 'encrypt' or 'decrypt'.\n";
+        return 1;
     }
 
-    // Perform the chosen operation
-    performOperation(option, inputFile, outputFile, password);
+    // Read data from input file
+    std::ifstream input(inputFile, std::ios::binary);
+    if (!input) {
+        std::cerr << "Error opening input file.\n";
+        return 1;
+    }
+
+    std::string plaintext((std::istreambuf_iterator<char>(input)), std::istreambuf_iterator<char>());
+    input.close();
+
+    std::string result;
+    if (mode == "encrypt") {
+        result = EncryptAES(plaintext, key);
+    } else if (mode == "decrypt") {
+        result = DecryptAES(plaintext, key);
+    }
+
+    // Save result to output file
+    std::ofstream output(outputFile, std::ios::binary);
+    if (!output) {
+        std::cerr << "Error opening output file.\n";
+        return 1;
+    }
+
+    output << result;
+    output.close();
+
+    std::cout << "Result successfully saved to file '" << outputFile << "'.\n";
 
     return 0;
 }
