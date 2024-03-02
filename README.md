@@ -9,9 +9,9 @@ iBunker is a command-line tool designed to provide encryption and decryption fun
 - Simple command-line interface for easy usage.
 - Cross-platform compatibility.
 
-### How iBunker Works
+## How iBunker Works
 
-#### Encryption:
+### Encryption:
 
 1. **Generating the Key:**
    - During encryption, iBunker internally generates a strong encryption key using a secure 256-bit key generator.
@@ -22,7 +22,7 @@ iBunker is a command-line tool designed to provide encryption and decryption fun
 3. **Saving the Result:**
    - The encrypted data is saved to `<output_file>`.
 
-#### Decryption:
+### Decryption:
 
 1. **Reading the Key:**
    - The program reads the decryption key from the specified `<key_file>`.
@@ -59,36 +59,6 @@ sudo apt-get update
 # Install the Crypto++ library
 sudo apt-get install libcrypto++-dev
 ```
-
-## How iBunker Works
-
-iBunker utilizes the AES encryption algorithm provided by the Crypto++ library for both encryption and decryption processes.
-
-### Encryption:
-
-1. **Reading the Key:**
-   - The program reads the encryption key from the specified `<key_file>`.
-
-2. **Encrypting the Text:**
-   - Using the AES encryption algorithm, the program encrypts the contents of the `<input_file>`.
-
-3. **Saving the Result:**
-   - The encrypted data is saved to `<output_file>`.
-
-### Decryption:
-
-1. **Reading the Key:**
-   - The program reads the decryption key from the specified `<key_file>`.
-
-2. **Decrypting the Text:**
-   - Using the AES decryption algorithm, the program decrypts the contents of the `<input_file>`.
-
-3. **Saving the Result:**
-   - The decrypted data is saved to `<output_file>`.
-
-### Modular Arithmetic:
-
-- Modular arithmetic is implicitly applied within the AES encryption and decryption processes to ensure that the resulting ciphertext and plaintext remain within the valid range of characters.
 
 ## Example
 
