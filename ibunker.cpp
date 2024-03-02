@@ -12,7 +12,25 @@
 #include <cryptopp/modes.h>
 #include <cryptopp/filters.h>
 #include <cryptopp/osrng.h>
-#include <string>
+#include <cryptopp/hex.h>
+#include <sstream>
+
+// Function to generate a strong key
+std::string GenerateAESKey() {
+    const int keyLength = 32; // Key size and bytes (256 bits)
+    CryptoPP::AutoSeededRandomPool rng;
+    CryptoPP::SecByteBlock key(keyLength);
+    rng.GenerateBlock(key, key.size());
+
+    // Convert the key to a hexadecimal string
+    std::string hexKey;
+    CryptoPP::HexEncoder encoder(new CryptoPP::StringSink(hexKey));
+    encoder.Put(key, key.size());
+    encoder.MessageEnd();
+
+    return hexKey;
+}
+
 
 // Function to encrypt using AES
 std::string EncryptAES(const std::string& plaintext, const std::string& key) {
@@ -64,14 +82,17 @@ int main(int argc, char* argv[]) {
     std::string key;
 
     if (mode == "encrypt") {
-        // Read key from specified file
-        std::ifstream keyInput(keyFile);
-        if (!keyInput) {
+        // Generate a key if encrypting
+        key = GenerateAESKey();
+
+        // Save key to specified key file
+        std::ofstream keyOutput(keyFile);
+        if (!keyOutput) {
             std::cerr << "Error opening key file.\n";
             return 1;
         }
-        std::getline(keyInput, key);
-        keyInput.close();
+        keyOutput << key;
+        keyOutput.close();
     } else if (mode == "decrypt") {
         // Check if all parameters were provided
         if (argc != 5) {
