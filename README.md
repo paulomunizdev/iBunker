@@ -31,7 +31,9 @@ iBunker is a command-line tool designed to provide encryption and decryption fun
    - Using the AES decryption algorithm, the program decrypts the contents of the `<input_file>`.
 
 3. **Saving the Result:**
-   - The decrypted data is saved to `<output_file>`.## Installation
+   - The decrypted data is saved to `<output_file>`.
+   -
+## Installation
 
 1. Clone the repository:
     ```bash
