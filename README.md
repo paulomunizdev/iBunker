@@ -9,16 +9,12 @@ iBunker is a command-line tool designed to provide encryption and decryption fun
 - Simple command-line interface for easy usage.
 - Cross-platform compatibility.
 
-## Usage
-
-Obrigado pela observação. Vou corrigir o trecho relacionado à geração da chave. Aqui está a atualização:
-
 ### How iBunker Works
 
 #### Encryption:
 
 1. **Generating the Key:**
-   - Upon encryption, iBunker generates a strong encryption key internally using a cryptographically secure pseudo-random number generator.
+   - During encryption, iBunker internally generates a strong encryption key using a secure 256-bit key generator.
 
 2. **Encrypting the Text:**
    - Using the AES encryption algorithm, the program encrypts the contents of the `<input_file>`.
