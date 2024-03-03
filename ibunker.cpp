@@ -1,6 +1,6 @@
 /*
  * Title: iBunker
- * Version: 2.0
+ * Version: 2.1
  * Author: Paulo Muniz
  * GitHub: https://github.com/paulomunizdev
  * Description: This program encrypts or decrypts files.
@@ -58,17 +58,43 @@ std::string DecryptAES(const std::string& ciphertext, const std::string& key) {
     CryptoPP::AES::Decryption aesDecryption((CryptoPP::byte*)key.c_str(), CryptoPP::AES::DEFAULT_KEYLENGTH);
     CryptoPP::CBC_Mode_ExternalCipher::Decryption cbcDecryption(aesDecryption, (CryptoPP::byte*)key.c_str());
 
-    // Decryption process
-    CryptoPP::StringSource(ciphertext, true,
-        new CryptoPP::StreamTransformationFilter(cbcDecryption,
-            new CryptoPP::StringSink(decryptedtext)
-        )
-    );
+    try {
+        // Decryption process
+        CryptoPP::StringSource(ciphertext, true,
+            new CryptoPP::StreamTransformationFilter(cbcDecryption,
+                new CryptoPP::StringSink(decryptedtext)
+            )
+        );
+    } catch (const CryptoPP::InvalidCiphertext& e) {
+        // Handle invalid ciphertext (e.g., incorrect key)
+        std::cerr << "Decryption failed (invalid key)\n";
+        decryptedtext = "Decryption failed (invalid key)";
+    }
 
     return decryptedtext;
 }
 
+// Function to display the help message
+void DisplayHelp() {
+    std::cout << "Usage: ./ibunker <encrypt/decrypt> <input_file> <output_file> <key_file>\n";
+    std::cout << "Available commands:\n";
+    std::cout << "  encrypt: Encrypts the input file and saves the key to the specified file.\n";
+    std::cout << "  decrypt: Decrypts the input file using the key from the specified file.\n";
+    std::cout << "\n";
+    std::cout << "iBunker\n";
+    std::cout << "Version: Paulo Muniz\n";
+    std::cout << "Author: 2.1\n";
+    std::cout << "GitHub: https://github.com/paulomunizdev\n";
+    std::cout << "Description: This program provides AES-256 encryption and decryption for files.\n";
+}
+
 int main(int argc, char* argv[]) {
+	
+	if (argc != 5 && argc != 6) {
+        DisplayHelp();
+        return 1;
+    }
+	
     // Check if correct number of arguments provided
     if (argc != 5 && argc != 6) {
         std::cerr << "Usage: " << argv[0] << " <encrypt/decrypt> <input_file> <output_file> <key_file>\n";
