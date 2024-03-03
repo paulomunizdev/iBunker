@@ -82,9 +82,9 @@ void DisplayHelp() {
     std::cout << "  decrypt: Decrypts the input file using the key from the specified file.\n";
     std::cout << "\n";
     std::cout << "iBunker\n";
-    std::cout << "Version: Paulo Muniz\n";
-    std::cout << "Author: 2.1\n";
-    std::cout << "GitHub: https://github.com/paulomunizdev\n";
+    std::cout << "Version: 2.1\n";
+    std::cout << "Author: Paulo Muniz\n";
+    std::cout << "GitHub: https://github.com/paulomunizdev/iBunker\n";
     std::cout << "Description: This program provides AES-256 encryption and decryption for files.\n";
 }
 
