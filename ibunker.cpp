@@ -2,7 +2,7 @@
  * Title: iBunker
  * Version: 2.1
  * Author: Paulo Muniz
- * GitHub: https://github.com/paulomunizdev
+ * GitHub: https://github.com/paulomunizdev/iBunker
  * Description: This program encrypts or decrypts files.
  */
 
