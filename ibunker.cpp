@@ -1,6 +1,6 @@
 /*
  * Title: iBunker
- * Version: 2.1
+ * Version: 2.2
  * Author: Paulo Muniz
  * GitHub: https://github.com/paulomunizdev/iBunker
  * Description: This program encrypts or decrypts files.
@@ -30,7 +30,6 @@ std::string GenerateAESKey() {
 
     return hexKey;
 }
-
 
 // Function to encrypt using AES
 std::string EncryptAES(const std::string& plaintext, const std::string& key) {
@@ -82,22 +81,16 @@ void DisplayHelp() {
     std::cout << "  decrypt: Decrypts the input file using the key from the specified file.\n";
     std::cout << "\n";
     std::cout << "iBunker\n";
-    std::cout << "Version: 2.1\n";
+    std::cout << "Version: 2.2\n";
     std::cout << "Author: Paulo Muniz\n";
     std::cout << "GitHub: https://github.com/paulomunizdev/iBunker\n";
     std::cout << "Description: This program provides AES-256 encryption and decryption for files.\n";
 }
 
 int main(int argc, char* argv[]) {
-	
+
 	if (argc != 5 && argc != 6) {
         DisplayHelp();
-        return 1;
-    }
-	
-    // Check if correct number of arguments provided
-    if (argc != 5 && argc != 6) {
-        std::cerr << "Usage: " << argv[0] << " <encrypt/decrypt> <input_file> <output_file> <key_file>\n";
         return 1;
     }
 
@@ -107,43 +100,11 @@ int main(int argc, char* argv[]) {
     std::string keyFile = argv[4];
     std::string key;
 
-    if (mode == "encrypt") {
-        // Generate a key if encrypting
-        key = GenerateAESKey();
-
-        // Save key to specified key file
-        std::ofstream keyOutput(keyFile);
-        if (!keyOutput) {
-            std::cerr << "Error opening key file.\n";
-            return 1;
-        }
-        keyOutput << key;
-        keyOutput.close();
-    } else if (mode == "decrypt") {
-        // Check if all parameters were provided
-        if (argc != 5) {
-            std::cerr << "Usage: " << argv[0] << " decrypt <input_file> <output_file> <key_file>\n";
-            return 1;
-        }
-
-        // Read key from specified file
-        std::ifstream keyInput(keyFile);
-        if (!keyInput) {
-            std::cerr << "Error opening key file.\n";
-            return 1;
-        }
-        std::getline(keyInput, key);
-        keyInput.close();
-    } else {
-        std::cerr << "Invalid mode. Use 'encrypt' or 'decrypt'.\n";
-        return 1;
-    }
-
     // Read data from input file
     std::ifstream input(inputFile, std::ios::binary);
     if (!input) {
-        std::cerr << "Error opening input file.\n";
-        return 1;
+      std::cerr << "Error opening input file.\n";
+      return 1;
     }
 
     std::string plaintext((std::istreambuf_iterator<char>(input)), std::istreambuf_iterator<char>());
