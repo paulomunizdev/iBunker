@@ -37,6 +37,18 @@ iBunker is a command-line tool designed to provide encryption and decryption fun
 3. **Saving the Result:**
    - The decrypted data is saved to `<output_file>`.
 
+## Dependencies
+
+Ensure that the Crypto++ library is installed on your system. If not, you can install it by following these steps:
+
+```bash
+# Update repositories
+sudo apt-get update
+
+# Install the Crypto++ library
+sudo apt-get install libcrypto++-dev
+```
+
 ## Installation
 
 1. Clone the repository:
@@ -53,18 +65,6 @@ iBunker is a command-line tool designed to provide encryption and decryption fun
     ```bash
     g++ -o ibunker ibunker.cpp -lcryptopp
     ```
-
-### Dependencies
-
-Ensure that the Crypto++ library is installed on your system. If not, you can install it by following these steps:
-
-```bash
-# Update repositories
-sudo apt-get update
-
-# Install the Crypto++ library
-sudo apt-get install libcrypto++-dev
-```
 
 ## Example
 
