@@ -3,7 +3,7 @@
  * Version:     0.2.1
  * Author:      Paulo Muniz
  * GitHub:      https://github.com/paulomunizdev/iBunker
- * Description: This program encrypts or decrypts files.
+ * Description: iBunker is a command-line tool for encrypting and decrypting files using 256-bit keys.
  */
 
 #include <iostream>
