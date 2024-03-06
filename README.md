@@ -20,7 +20,7 @@ iBunker is a command-line tool designed to provide encryption and decryption fun
 1. **Generating the Key:**
    - During encryption, iBunker internally generates a strong encryption key using a secure 256-bit key generator.
 
-2. **Encrypting the Text:**
+2. **Encrypting the File:**
    - Using the AES encryption algorithm, the program encrypts the contents of the `<input_file>`.
 
 3. **Saving the Result:**
@@ -31,7 +31,7 @@ iBunker is a command-line tool designed to provide encryption and decryption fun
 1. **Reading the Key:**
    - The program reads the decryption key from the specified `<key_file>`.
 
-2. **Decrypting the Text:**
+2. **Decrypting the File:**
    - Using the AES decryption algorithm, the program decrypts the contents of the `<input_file>`.
 
 3. **Saving the Result:**
